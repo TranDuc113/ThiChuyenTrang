@@ -1,0 +1,185 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="/Common/assets/libs/dropzone/dropzone.css" type="text/css" />
+<!-- Filepond css -->
+<link rel="stylesheet" href="/Common/assets/libs/filepond/filepond.min.css" type="text/css" />
+<link rel="stylesheet" href="/Common/assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css">
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Bài viết</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12" id="card-none1">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title mb-0">Tìm kiếm</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body collapse show" id="collapseexample1">
+                <div class="row">
+                    <div class="col-xxl-12 col-md-6">
+                        <div>
+                            <label for="basiInput" class="form-label">Tiêu đề</label>
+                            <input type="text" class="form-control" id="txtTieuDe">
+                        </div>
+                    </div>
+                    <div class="col-xxl-3 col-md-6">
+                        <div>
+                            <label for="basiInput" class="form-label">Danh mục bài viết</label>
+                            <select class="form-select" id="slDanhMucBaiViet">
+                                <option selected="">Select your Status </option>
+                                <option value="1">Declined Payment</option>
+                                <option value="2">Delivery Error</option>
+                                <option value="3">Wrong Amount</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xxl-3 col-md-6" style="display: flex; align-items: end;">
+                        <a href="#" class="btn btn-primary">Tìm kiếm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12" id="card-none1">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title mb-0">Danh sách bài viết</h6>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <a href="#" class="btn btn-primary" onclick="DetailNewAdd()">Thêm mới</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body collapse show" id="collapseexample1">
+                <table id="DanhSachBaiViet" class="display nowrap" style="width:100%">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div data-bs-backdrop="static" id="DetailNewsModal" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none; bottom: 160px!important">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomInModalLabel">Sửa bài viết</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="DataDetailNewsModal">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Thoát</button>
+                <button type="button" class="btn btn-primary " onclick="DetailCategorySave()">Lưu</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section script
+{
+<script src="https://cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
+<!-- include FilePond library -->
+<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>;
+
+<!-- include FilePond plugins -->
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>;
+
+<!-- include FilePond jQuery adapter -->
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>;
+<script>
+        var tableDanhSachDanhMucBaiViet = null;
+        $(document).ready(function () {
+            GetData();
+        });
+
+
+        //function DetailCategoryAdd() {
+        //    loading();
+        //    $("#DataDetailCategoryModalAdd").load("/Admin/Category/DanhMuc_ThemMoi", {  }, function (data) {
+        //        $("#DetailCategoryModalAdd").modal("show");
+        //        offLoading();
+        //    });
+        //}
+
+        function DetailNewAdd() {
+            loading();
+            $("#DataDetailNewsModal").load("/Admin/News/News_Add", { }, function (data) {
+                $("#DetailNewsModal").modal("show");
+                offLoading();
+            });
+
+        }
+
+        function GetData() {
+
+            tableDanhSachDanhMucBaiViet = $.fn.initDataTable('#DanhSachBaiViet', {
+                serverSide: true,
+                searching: false,
+                lengthMenu: [50],
+                scrollX: true,
+                scrollY: true,
+                columnDefs: [{
+                    orderable: true,
+                    targets: 0
+                }],
+                preDrawCallback: function () {
+                    loading()
+                },
+                columns: [
+                    {
+                        "data": "id", title: "STT", "render": function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { "data": "titles", title: "Tiêu đề" },
+                    { "data": "categoryTitle", title: "Danh mục" },
+                    { "data": "createByName", title: "Người tạo" },
+                    { "data": "createdDate", title: "Ngày tạo" },
+                    { "data": "updateByName", title: "Người cập nhật" },
+                    { "data": "updateByDate", title: "Ngày cập nhật" },
+                    {
+                        "data": "id", title: "Thao tác", "render": function (data) {
+                            return `<a type="button" class="btn btn-outline-warning waves-effect waves-light" onclick="DetailNew(${data})"><i class=" ri-edit-box-line"></i></a>`;
+                        }
+                    }
+                ],
+                ajax: {
+                    url: "/Admin/Category/GetAllCategory",
+                    type: "post",
+                    data: (params) => {
+                        params.txtTitle = $("#txtTieuDe").val();
+                    }
+                },
+                drawCallback: function () {
+                    offLoading();
+                },
+                initComplete: function (dt) {
+                    //offloading();
+                    if (dt.type == "error") {
+                        showErrorToast("Thất bại", dt.message, dt.type);
+                    }
+                }
+            });
+
+        }
+
+</script>
+}

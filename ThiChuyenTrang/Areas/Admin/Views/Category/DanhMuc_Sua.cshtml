@@ -19,7 +19,7 @@
     </div>
 </div>
 <script>
-    function DetailCategorySave(Id) {
+    function DetailCategorySave() {
         loading();
         $.post("/Admin/Category/DetailCategorySave", { "Id": parseInt($("#IdDanhMuc").val()), "Title": $("#txtTieuDeSua").val(), "Slug": $("#txtSlugSua").val() }, function (data) {
             if (data.icon == "success") {

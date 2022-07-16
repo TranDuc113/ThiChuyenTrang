@@ -17,7 +17,7 @@
     </div>
 </div>
 <script>
-    function DetailCategorySave(Id) {
+    function DetailCategorySaveAdd() {
         loading();
         $.post("/Admin/Category/DetailCategorySave", { "Id": 0, "Title": $("#txtTieuDeThemMoi").val(), "Slug": $("#txtSlugThemMoi").val() }, function (data) {
             if (data.icon == "success") {

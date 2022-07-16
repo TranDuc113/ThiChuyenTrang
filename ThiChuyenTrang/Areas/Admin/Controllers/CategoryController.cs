@@ -32,6 +32,7 @@ namespace ThiChuyenTrang.Areas.Admin.Controllers
                          join usUpdate in context.Users on ct.UpdatedBy equals usUpdate.Id into usUpdates
                          from us_Update in usUpdates.DefaultIfEmpty()
                          where (string.IsNullOrEmpty(txtTitle) || ct.Title.Contains(txtTitle))
+                         && (ct.IsDelete==false)
                          select new
                          {
                              Id = ct.Id,
