@@ -1,0 +1,32 @@
+﻿
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xxl-6 col-md-12">
+        <div>
+            <label for="basiInput" class="form-label">Tiêu đề</label>
+            <input type="text" class="form-control" id="txtTieuDeThemMoi" value="">
+        </div>
+    </div>
+    <div class="col-xxl-6 col-md-12">
+        <div>
+            <label for="basiInput" class="form-label">Slug</label>
+            <input type="text" class="form-control" id="txtSlugThemMoi" value="">
+        </div>
+    </div>
+</div>
+<script>
+    function DetailCategorySave(Id) {
+        loading();
+        $.post("/Admin/Category/DetailCategorySave", { "Id": 0, "Title": $("#txtTieuDeThemMoi").val(), "Slug": $("#txtSlugThemMoi").val() }, function (data) {
+            if (data.icon == "success") {
+                window.location.href = "/Admin/Home/index";
+            } else {
+                debugger;
+                ToastMessage("Có lỗi", data.message, data.icon, 'warning')
+            }
+            offLoading();
+        });
+    }
+</script>

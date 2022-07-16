@@ -1,0 +1,175 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Danh mục bài viết</h4>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12" id="card-none1">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title mb-0">Tìm kiếm</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body collapse show" id="collapseexample1">
+                <div class="col-xxl-3 col-md-6">
+                    <div>
+                        <label for="basiInput" class="form-label">Tiêu đề</label>
+                        <input type="text" class="form-control" id="txtTieuDe">
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-md-6">
+                    <a href="#" class="btn btn-primary">Tìm kiếm</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12" id="card-none1">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title mb-0">Tìm kiếm</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body collapse show" id="collapseexample1">
+                <table id="DanhSachDanhMucBaiViet" class="display nowrap" style="width:100%">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="DetailCategoryModal" class="modal-custom fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none; bottom: 160px!important">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomInModalLabel">Sửa danh mục</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="DataDetailCategoryModal">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary ">Save Changes</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div id="DetailCategoryModalAdd" class="modal-custom fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none; bottom: 160px!important">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomInModalLabel">Sửa danh mục</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="DataDetailCategoryModalAdd">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary ">Save Changes</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+@section script
+{
+    <script>
+        var tableDanhSachDanhMucBaiViet = null;
+        $(document).ready(function () {
+            GetData();
+        });
+
+
+        function DetailCategoryAdd(Id) {
+            loading();
+            $("#DataDetailCategoryModalAdd").post("/Admin/Category/DanhMuc_ThemMoi", {  }, function (data) {
+                $("#DetailCategoryModalAdd").modal("show");
+                offLoading();
+            });
+
+        }
+
+        function DetailCategory(Id) {
+            loading();
+            $("#DataDetailCategoryModal").post("/Admin/Category/DanhMuc_Sua", { "Id": Id }, function (data) {
+                $("#DetailCategoryModal").modal("show");
+                offLoading();
+            });
+
+        }
+
+        function GetData() {
+
+            tableDanhSachDanhMucBaiViet = $.fn.initDataTable('#DanhSachDanhMucBaiViet', {
+                serverSide: true,
+                searching: false,
+                lengthMenu: [50],
+                scrollX: true,
+                scrollY: true,
+                columnDefs: [{
+                    orderable: true,
+                    targets: 0
+                }],
+                preDrawCallback: function () {
+                    loading()
+                },
+                columns: [
+                    {
+                        "data": "id", "render": function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { "data": "titles", title: "Tiêu đề" },
+                    { "data": "createByName", title: "Người tạo" },
+                    { "data": "createdDate", title: "Ngày tạo" },
+                    { "data": "updateByName", title: "Người cập nhật" },
+                    { "data": "updateByDate", title: "Ngày cập nhật" },
+                    {
+                        "data": "id", title: "Thao tác", "render": function (data) {
+                            return `<a type="button" class="btn btn-outline-warning waves-effect waves-light" onclick="DetailCategory(${data})"><i class=" ri-edit-box-line"></i></a>`;
+                        }
+                    }
+                ],
+                ajax: {
+                    url: "/Admin/Category/GetAllCategory",
+                    type: "post",
+                    data: (params) => {
+                        params.txtTitle = $("#txtTieuDe").val();
+                    }
+                },
+                drawCallback: function () {
+                    offLoading();
+                },
+                initComplete: function (dt) {
+                    //offloading();
+                    if (dt.type == "error") {
+                        showErrorToast("Thất bại", dt.message, dt.type);
+                    }
+                }
+            });
+
+        }
+
+    </script>
+}

@@ -1,0 +1,247 @@
+:root {
+    --button-size: 16px;
+    --white-color: #fff;
+    --button-background-primary: #1890ff;
+    --button-background-primary-hover: #40a9ff;
+    --button-background-success: #22C55E;
+    --button-background-success-hover: #16A34A;
+    --button-background-warning: #F59E0B;
+    --button-background-warning-hover: #D97706;
+    --button-background-danger: #EF4444;
+    --button-background-danger-hover: #DC2626;
+    --button-background-help: #a855f7;
+    --button-background-help-hover: #9333EA;
+    --button-background-info: #3b82f6;
+    --button-background-info-hover: #2563eb;
+    --button-background-secondary: #64748b;
+    --button-background-secondary-hover: #475569;
+}
+
+.nv-btn {
+    width: -moz-fit-content;
+    width: fit-content;
+    position: relative;
+    display: inline-block;
+    font-weight: 400;
+    white-space: nowrap;
+    text-align: center;
+    background-image: none;
+    border: 1px solid transparent;
+    box-shadow: 0 2px #00000004;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    padding: 4px 15px;
+    font-size: var(--button-size);
+    border-radius: 4px;
+    color: #000000d9;
+    border-color: #d9d9d9;
+    background: #fff;
+    outline: none;
+}
+
+.nv-btn:hover {
+    color: var(--button-background-primary);
+    border-color: var(--button-background-primary);
+}
+
+.nv-btn.primary {
+    border: 1px solid var(--button-background-primary);
+    color: var(--white-color);
+    background-color: var(--button-background-primary);
+    transition: all linear .1s;
+}
+
+.nv-btn.primary:hover {
+    background-color: var(--button-background-primary-hover);
+}
+
+.nv-btn>i {
+    font-size: 13px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.nv-btn.loading {
+    cursor: not-allowed;
+    opacity: .5;
+}
+
+.nv-btn.loading>i {
+    -webkit-animation: rotating 1.2s linear infinite;
+    -moz-animation: rotating 1.2s linear infinite;
+    -ms-animation: rotating 1.2s linear infinite;
+    -o-animation: rotating 1.2s linear infinite;
+    animation: rotating 1.2s linear infinite;
+}
+
+.nv-btn.outline {
+    color: var(--button-background-primary);
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid var(--button-background-primary);
+}
+
+.nv-btn.outline:hover {
+    color: var(--white-color);
+    background-color: var(--button-background-primary);
+}
+
+
+/* button success*/
+
+.nv-btn.success:not(.outline) {
+    color: var(--white-color);
+    background-color: var(--button-background-success);
+    border: 1px solid var(--button-background-success);
+}
+
+.nv-btn.success:not(.outline):hover {
+    background-color: var(--button-background-success-hover);
+}
+
+
+/* button warning*/
+
+.nv-btn.warning:not(.outline) {
+    color: var(--white-color);
+    background-color: var(--button-background-warning);
+    border: 1px solid var(--button-background-warning);
+}
+
+.nv-btn.warning:not(.outline):hover {
+    background-color: var(--button-background-warning-hover);
+}
+
+
+/* button danger*/
+
+.nv-btn.danger:not(.outline) {
+    color: var(--white-color);
+    background-color: var(--button-background-danger);
+    border: 1px solid var(--button-background-danger);
+}
+
+.nv-btn.danger:not(.outline):hover {
+    background-color: var(--button-background-danger-hover);
+}
+
+
+/* button help*/
+
+.nv-btn.help:not(.outline) {
+    color: var(--white-color);
+    background-color: var(--button-background-help);
+    border: 1px solid var(--button-background-help);
+}
+
+.nv-btn.help:not(.outline):hover {
+    background-color: var(--button-background-help-hover);
+}
+
+
+/* button info*/
+
+.nv-btn.info:not(.outline) {
+    color: var(--white-color);
+    background-color: var(--button-background-info);
+    border: 1px solid var(--button-background-info);
+}
+
+.nv-btn.info:not(.outline):hover {
+    background-color: var(--button-background-info-hover);
+}
+
+
+/* button secondary*/
+
+.nv-btn.secondary:not(.outline) {
+    color: var(--white-color);
+    background-color: var(--button-background-secondary);
+    border: 1px solid var(--button-background-secondary);
+}
+
+.nv-btn.secondary:not(.outline):hover {
+    background-color: var(--button-background-secondary-hover);
+}
+
+
+/* button outline success*/
+
+.nv-btn.outline.success {
+    color: var(--button-background-success);
+    border: 1px solid var(--button-background-success);
+}
+
+.nv-btn.outline.success:hover {
+    color: var(--white-color);
+    background-color: var(--button-background-success);
+}
+
+
+/* button outline warning*/
+
+.nv-btn.outline.warning {
+    color: var(--button-background-warning);
+    border: 1px solid var(--button-background-warning);
+}
+
+.nv-btn.outline.warning:hover {
+    color: var(--white-color);
+    background-color: var(--button-background-warning);
+}
+
+
+/* button outline danger*/
+
+.nv-btn.outline.danger {
+    color: var(--button-background-danger);
+    border: 1px solid var(--button-background-danger);
+}
+
+.nv-btn.outline.danger:hover {
+    color: var(--white-color);
+    background-color: var(--button-background-danger);
+}
+
+
+/* button outline help*/
+
+.nv-btn.outline.help {
+    color: var(--button-background-help);
+    border: 1px solid var(--button-background-help);
+}
+
+.nv-btn.outline.help:hover {
+    color: var(--white-color);
+    background-color: var(--button-background-help);
+}
+
+
+/* button outline info*/
+
+.nv-btn.outline.info {
+    color: var(--button-background-info);
+    border: 1px solid var(--button-background-info);
+}
+
+.nv-btn.outline.info:hover {
+    color: var(--white-color);
+    background-color: var(--button-background-info);
+}
+
+
+/* button outline secondary*/
+
+.nv-btn.outline.secondary {
+    color: var(--button-background-secondary);
+    border: 1px solid var(--button-background-secondary);
+}
+
+.nv-btn.outline.secondary:hover {
+    color: var(--white-color);
+    background-color: var(--button-background-secondary);
+}
