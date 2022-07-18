@@ -57,6 +57,7 @@ namespace ThiChuyenTrang
 
                 };
             });
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddSingleton<IJwtAuthenicationManager>(new JwtAuthenicationManager(tokenKey));
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>(); 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

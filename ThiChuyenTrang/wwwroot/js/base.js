@@ -1,6 +1,6 @@
 // loading
 function loading() {
-    debugger;
+    ;
     $("#loading").addClass("active");
 }
 

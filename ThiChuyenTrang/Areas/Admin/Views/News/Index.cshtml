@@ -27,7 +27,7 @@
             </div>
             <div class="card-body collapse show" id="collapseexample1">
                 <div class="row">
-                    <div class="col-xxl-12 col-md-6">
+                    <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="basiInput" class="form-label">Tiêu đề</label>
                             <input type="text" class="form-control" id="txtTieuDe">
@@ -62,7 +62,7 @@
                         <h6 class="card-title mb-0">Danh sách bài viết</h6>
                     </div>
                     <div class="flex-shrink-0">
-                        <a href="#" class="btn btn-primary" onclick="DetailNewAdd()">Thêm mới</a>
+                        <a href="#" class="btn btn-primary" onclick="AddNews()">Thêm mới</a>
                     </div>
                 </div>
             </div>
@@ -70,6 +70,24 @@
                 <table id="DanhSachBaiViet" class="display nowrap" style="width:100%">
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<div data-bs-backdrop="static" id="AddNewsModal" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none; bottom: 160px!important">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomInModalLabel">Sửa bài viết</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="DataAddNewsModal">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Thoát</button>
+                <button type="button" class="btn btn-primary " onclick="DetailCategorySave()">Lưu</button>
+            </div>
+
         </div>
     </div>
 </div>
@@ -101,7 +119,7 @@
 
 <!-- include FilePond plugins -->
 <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>;
-
+<script src="https://unpkg.com/filepond-plugin-pdf-preview/dist/filepond-plugin-pdf-preview.min.js"></script>
 <!-- include FilePond jQuery adapter -->
 <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>;
 <script>
@@ -110,19 +128,19 @@
             GetData();
         });
 
-
-        //function DetailCategoryAdd() {
-        //    loading();
-        //    $("#DataDetailCategoryModalAdd").load("/Admin/Category/DanhMuc_ThemMoi", {  }, function (data) {
-        //        $("#DetailCategoryModalAdd").modal("show");
-        //        offLoading();
-        //    });
-        //}
-
-        function DetailNewAdd() {
+        function DetailNew() {
             loading();
-            $("#DataDetailNewsModal").load("/Admin/News/News_Add", { }, function (data) {
+            $("#DataDetailNewsModal").load("/Admin/News/News_Detail", { }, function (data) {
                 $("#DetailNewsModal").modal("show");
+                offLoading();
+            });
+
+        }
+
+        function AddNews() {
+            loading();
+            $("#DataAddNewsModal").load("/Admin/News/News_Add", { }, function (data) {
+                $("#AddNewsModal").modal("show");
                 offLoading();
             });
 
@@ -162,7 +180,7 @@
                     }
                 ],
                 ajax: {
-                    url: "/Admin/Category/GetAllCategory",
+                    url: "/Admin/News/GetAllNews",
                     type: "post",
                     data: (params) => {
                         params.txtTitle = $("#txtTieuDe").val();

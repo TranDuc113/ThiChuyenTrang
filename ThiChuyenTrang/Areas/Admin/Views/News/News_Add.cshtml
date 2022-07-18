@@ -2,28 +2,94 @@
     Layout = null;
     var lstCategory = ViewBag.lstCategory;
 }
+<style>
+    .DataFile {
+        margin: 5px;
+        padding: 5px;
+        border: 1px solid;
+        border-radius: 10px;
+    }
+</style>
+    <style>
+        #dropzoneAnhDaiDien {
+            position: relative;
+            border: 1px dotted #000;
+            border-radius: 10px;
+            color: #000;
+            height: 140px;
+            text-align: center;
+        }
+
+        #dropzoneAnhDaiDien.hover {
+            border: 4px solid green;
+            color: green;
+        }
+
+        #dropzoneAnhDaiDien.dropped {
+            background: #222;
+            border: 5px solid #444;
+        }
+
+        #dropzoneAnhDaiDien div {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        #dropzoneAnhDaiDien img {
+            border-radius: 5px;
+            vertical-align: middle;
+            max-width: 95%;
+            max-height: 95%;
+        }
+
+        #dropzoneAnhDaiDien [type="file"] {
+            cursor: pointer;
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+    </style>
 <div class="row">
-    <div class="col-xxl-12 col-md-12">
-        <div>
-            <label for="basiInput" class="form-label">Danh mục</label>
-            <select class="form-select" id="slDanhMucThemMoi">
-                <option value="">Chọn </option>
-                @if (lstCategory != null)
-                {
-                    foreach (var item in lstCategory)
-                    {
-                        <option value="@item.Id">@item.Title</option>
-                    }
-                }
-            </select>
+    <div class="col-8">
+        <div class="row">
+            <div class="col-xxl-12 col-md-12">
+                <div>
+                    <label for="basiInput" class="form-label">Danh mục</label>
+                    <select class="form-select" id="slDanhMucThemMoi">
+                        <option value="">Chọn </option>
+                        @if (lstCategory != null)
+                        {
+                            foreach (var item in lstCategory)
+                            {
+                                <option value="@item.Id">@item.Title</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-xxl-12 col-md-12" style="margin-top: 5px;">
+                <div>
+                    <label for="basiInput" class="form-label">Tiêu đề</label>
+                    <input class="form-control" id="txtTieuDeThemMoi" name="txtTieuDeThemMoi" />
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-xxl-12 col-md-12" style="margin-top: 5px;">
-        <div>
-            <label for="basiInput" class="form-label">Tiêu đề</label>
-            <input class="form-control" id="txtTieuDeThemMoi" name="txtTieuDeThemMoi" />
+    <div class="col-4">
+        <div id="dropzoneAnhDaiDien">
+            <div>Ảnh đại điện</div>
+            <input type="file" />
         </div>
     </div>
+</div>
+<div class="row">
     <div class="col-xxl-12 col-md-12">
         <div>
             <label for="basiInput" class="form-label">Nội dung</label>
@@ -34,35 +100,194 @@
     <div class="col-xxl-12 col-md-12" style="margin-top: 5px;">
         <div>
             <label for="basiInput" class="form-label">File đính kèm</label>
-            <input type="file" class="my-pond" name="filepond" />
+            <div class="dropzone_s" style="border: 1px dotted;min-height: 50px;border-radius: 10px;">
+                <div id="dropzone" style="position: relative;height: 50px;">
+                    <div style="text-align: center;padding: 15px;">Kéo thả file</div>
+                    <input type="file" id="#dropzoneFile" style=" width: 100%;height: 50px; position: absolute;opacity: 0; top: 0;">
+                </div>
+                <div style="" class="DataFile">
+                    <div class="row">
+                        <div class="col-11">
+                            <span>Tên File</span>
+                        </div>
+                        <div class="col-1">
+                            <a href="#" style="font-size: 20px;" class="link-success fs-15" title="Tải xuống">
+                                <i class="ri-download-2-line"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="link-danger fs-15" title="Xóa"><i class="ri-delete-bin-line"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
 
-    $(function(){
-        // First register any plugins
-        $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+    var dropzone = $("#dropzone"),
+    inputFile    = dropzone.find('input');
 
-        // Turn input element into a pond
-        $('.my-pond').filepond();
+    dropzone.on({
+        dragenter : dragin,
+        dragleave : dragout
+    });
 
-        // Set allowMultiple property to true
-        $('.my-pond').filepond('allowMultiple', true);
-  
-        // Listen for addfile event
-        $('.my-pond').on('FilePond:addfile', function(e) {
-            debugger;
-            console.log('file added event', e);
-        });
+    inputFile.on('change', drop);
 
-        // Manually add a file using the addfile method
-        $('.my-pond').first().filepond('addFile', 'index.html').then(function(file){
-          console.log('file added', file);
-        });
-  
-      });
+    function dragin(e) { //function for drag into element, just turns the bix X white
+        $(dropzone).addClass('hover');
+    }
+
+    function dragout(e) { //function for dragging out of element
+        $(dropzone).removeClass('hover');
+    }
+
+    function drop(e) {
+        debugger
+        var file = this.files[0];
+
+        $('#dropzone').removeClass('hover').addClass('dropped').find('img').remove();
+
+        // upload file here
+        showfile(file); // showing file for demonstration ...
+    }
+
+    function showfile(file) {
+        debugger;
+        var reader = new FileReader(file);
+        reader.readAsDataURL(file);
+
+        reader.onload = function(e) {
+            $('#dropzone div').html($('<img />').attr('src', e.target.result).fadeIn());
+        }
+    }
+
+    
+    var dropzoneAnhDaiDien = $("#dropzoneAnhDaiDien"),
+    inputAnhDaiDien    = dropzoneAnhDaiDien.find('input');
+
+    dropzoneAnhDaiDien.on({
+        dragenter : draginAnhDaiDien,
+        dragleave : dragoutAnhDaiDien
+    });
+
+    inputAnhDaiDien.on('change', dropAnhDaiDien);
+
+    function draginAnhDaiDien(e) { //function for drag into element, just turns the bix X white
+        $(dropzoneAnhDaiDien).addClass('hover');
+    }
+
+    function dragoutAnhDaiDien(e) { //function for dragging out of element                         
+        $(dropzoneAnhDaiDien).removeClass('hover');
+    }
+
+    function dropAnhDaiDien(e) {
+        var file = this.files[0];
+
+        $('#dropzoneAnhDaiDien').removeClass('hover').addClass('dropped').find('img').remove();
+            
+        // upload file here
+        showfileAnhDaiDien(file); // showing file for demonstration ... 
+    }
+
+    function showfileAnhDaiDien(file) {
+        debugger;
+        var reader = new FileReader(file);
+        reader.readAsDataURL(file);
+
+        reader.onload = function(e) {
+            $('#dropzoneAnhDaiDien div').css("top","0")
+            $('#dropzoneAnhDaiDien div').html($('<img />').attr('src', e.target.result).fadeIn());
+        }
+    }
+
+
+
+
+    //$(function(){
+    //    // First register any plugins
+    //    $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+    //    $.fn.filepond.registerPlugin(FilePondPluginGetFile);
+
+    //    // Turn input element into a pond
+    //    $('.my-pond').filepond();
+
+    //    // Set allowMultiple property to true
+    //    $('.my-pond').filepond('allowMultiple', true);
+
+    //    // Listen for addfile event
+    //    $('.my-pond').on('FilePond:addfile', function(e) {
+    //    });
+
+
+    //    $('.my-pond').filepond.setOptions({
+    //            server: {
+    //                process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+    //                    const formData = new FormData();
+    //                    formData.append("file", file, file.name);
+    //                    $.ajax({
+    //                        url: "/Admin/News/Upload",
+    //                        type: 'POST',
+    //                        data: formData,
+    //                        contentType: false,
+    //                        processData: false,
+    //                        success: function (res) {
+    //                            load(res);
+    //                        },
+    //                    });
+    //                    return {
+    //                        abort: () => {
+    //                            request.abort();
+    //                            abort();
+    //                        },
+    //                    };
+    //                },
+    //                revert: (uniqueFileId, load, error) => {
+    //                    $.post("/Admin/News/revert",{"Id":uniqueFileId},function (data){
+
+    //                    })
+
+    //                    console.log("test revert");
+    //                    load();
+    //                },
+    //                fetch: (url, load, error, progress, abort, headers) => {
+    //                    debugger;
+    //                    // Should get a file object from the URL here
+    //                    // ...
+
+    //                    // Can call the error method if something is wrong, should exit after
+    //                    error('oh my goodness');
+
+    //                    // Can call the header method to supply FilePond with early response header string
+    //                    // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/getAllResponseHeaders
+    //                    headers(headersString);
+
+    //                    // Should call the progress method to update the progress to 100% before calling load
+    //                    // (computable, loadedSize, totalSize)
+    //                    progress(true, 0, 1024);
+
+    //                    // Should call the load method with a file object when done
+    //                    load(file);
+
+    //                    // Should expose an abort method so the request can be cancelled
+    //                    return {
+    //                        abort: () => {
+    //                            // User tapped abort, cancel our ongoing actions here
+
+    //                            // Let FilePond know the request has been cancelled
+    //                            abort();
+    //                        },
+    //                    };
+    //                },
+    //            },
+    //        });
+
+    //    // Manually add a file using the addfile method
+    //    $('.my-pond').first().filepond('addFile', 'index.html').then(function(file){
+    //    });
+
+    //  });
 
       function DetailCategorySaveAdd() {
           loading();
@@ -70,7 +295,7 @@
               if (data.icon == "success") {
                   window.location.href = "/Admin/Home/index";
               } else {
-                  debugger;
+                  ;
                   ToastMessage("Có lỗi", data.message, data.icon, 'warning')
               }
               offLoading();

@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+
+<input type="file" class="my-pondTest" name="filepond" />
+
+
+<script>
+
+    $(function(){
+        // First register any plugins
+        $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+        $.fn.filepond.registerPlugin(FilePondPluginPdfPreview);
+        // Turn input element into a pond
+        $('.my-pondTest').filepond();
+
+        // Set allowMultiple property to true
+        $('.my-pondTest').filepond('allowMultiple', true);
+
+        // Listen for addfile event
+        $('.my-pondTest').on('FilePond:addfile', function(e) {
+        });
+
+
+        $('.my-pondTest').filepond.setOptions({
+                server: {
+                    process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                        const formData = new FormData();
+                        formData.append("file", file, file.name);
+                        $.ajax({
+                            url: "/Admin/News/Upload",
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function (res) {
+                                load(res);
+                            },
+                        });
+                        return {
+                            abort: () => {
+                                request.abort();
+                                abort();
+                            },
+                        };
+                    },
+                    revert: (uniqueFileId, load, error) => {
+                        $.post("/Admin/News/revert",{"Id":uniqueFileId},function (data){
+
+                        })
+
+                        console.log("test revert");
+                        load();
+                    },
+                },
+            });
+
+        // Manually add a file using the addfile method
+        $('.my-pondTest').first().filepond('addFile', 'index.html').then(function(file){
+        });
+
+      });
+</script>
